@@ -1,0 +1,24 @@
+name: CI
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install build tools
+        run: sudo apt-get update && sudo apt-get install -y build-essential
+
+      - name: Build
+        run: gcc -Wall -Werror -std=c11 -O2 -o anime_selector anime_selector.c
+
+      - name: Run (non-interactive)
+        run: timeout 10s bash -lc 'printf "0\n" | ./anime_selector'
